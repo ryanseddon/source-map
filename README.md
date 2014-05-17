@@ -54,16 +54,16 @@ Get a reference to the module:
     let sourceMap = {};
     Components.utils.import('resource:///modules/SourceMapConsumer.jsm', sourceMap);
 
-### SourceMapConsumer
+### `SourceMapConsumer`
 
-A SourceMapConsumer instance represents a parsed source map which we can query
+A `SourceMapConsumer` instance represents a parsed source map which we can query
 for information about the original file positions by giving it a file position
 in the generated source.
 
-#### new SourceMapConsumer(rawSourceMap)
+#### `new SourceMapConsumer(rawSourceMap)`
 
 The only parameter is the raw source map (either as a string which can be
-`JSON.parse`'d, or an object). According to the spec, source maps have the
+`JSON.parse`-ed, or an object). According to the spec, source maps have the
 following attributes:
 
 * `version`: Which version of the source map spec this map is following.
@@ -79,7 +79,7 @@ following attributes:
 
 * `file`: The generated filename this source map is associated with.
 
-#### SourceMapConsumer.prototype.originalPositionFor(generatedPosition)
+#### `SourceMapConsumer.prototype.originalPositionFor(generatedPosition)`
 
 Returns the original source, line, and column information for the generated
 source's line and column positions provided. The only argument is an object with
@@ -89,34 +89,34 @@ the following properties:
 
 * `column`: The column number in the generated source.
 
-and an object is returned with the following properties:
+…and an object is returned with the following properties:
 
-* `source`: The original source file, or null if this information is not
+* `source`: The original source file, or `null` if this information is not
   available.
 
-* `line`: The line number in the original source, or null if this information is
+* `line`: The line number in the original source, or `null` if this information is
   not available.
 
-* `column`: The column number in the original source, or null or null if this
+* `column`: The column number in the original source, or `null` if this
   information is not available.
 
-* `name`: The original identifier, or null if this information is not available.
+* `name`: The original identifier, or `null` if this information is not available.
 
-### SourceMapGenerator
+### `SourceMapGenerator`
 
-An instance of the SourceMapGenerator represents a source map which is being
+An instance of the `SourceMapGenerator` represents a source map which is being
 built incrementally.
 
-#### new SourceMapGenerator(startOfSourceMap)
+#### `new SourceMapGenerator(startOfSourceMap)`
 
 To create a new one, you must pass an object with the following properties:
 
 * `file`: The filename of the generated source that this source map is
   associated with.
 
-* `sourceRoot`: An optional root for all relative URLs in this source map.
+* `sourceRoot`: Optional. The root for all relative URLs in this source map.
 
-#### SourceMapGenerator.prototype.addMapping(mapping)
+#### `SourceMapGenerator.prototype.addMapping(mapping)`
 
 Add a single mapping from original source line and column to the generated
 source's line and column for this source map being created. The mapping object
@@ -126,41 +126,41 @@ should have the following properties:
 
 * `original`: An object with the original line and column positions.
 
-* `source`: The original source file (relative to the sourceRoot).
+* `source`: The original source file (relative to the `sourceRoot`).
 
-* `name`: An optional original token name for this mapping.
+* `name`: Optional. The original token name for this mapping.
 
-#### SourceMapGenerator.prototype.toString()
+#### `SourceMapGenerator.prototype.toString()`
 
 Renders the source map being generated to a string.
 
-### SourceNode
+### `SourceNode`
 
-SourceNodes provide a way to abstract over interpolating and/or concatenating
+`SourceNode`s provide a way to abstract over interpolating and/or concatenating
 snippets of generated JavaScript source code, while maintaining the line and
 column information associated between those snippets and the original source
 code. This is useful as the final intermediate representation a compiler might
 use before outputting the generated JS and source map.
 
-#### new SourceNode(line, column[, chunk])
+#### `new SourceNode(line, column[, chunk])`
 
-* `line`: The original line number associated with this source node, or null if
+* `line`: The original line number associated with this source node, or `null` if
   it isn't associated with an original line.
 
-* `column`: The original column number associated with this source node, or null
+* `column`: The original column number associated with this source node, or `null`
   if it isn't associated with an original column.
 
 * `chunk`: Optional. Is immediately passed to `SourceNode.prototype.add`, see
   below.
 
-#### SourceNode.prototype.add(chunk)
+#### `SourceNode.prototype.add(chunk)`
 
 Add a chunk of generated JS to this source node.
 
 * `chunk`: A string snippet of generated JS code, another instance of
-   `SourceNode`, or an array where each member is one of those things.
+    `SourceNode`, or an array where each member is one of those things.
 
-#### SourceNode.prototype.walk(fn)
+#### `SourceNode.prototype.walk(fn)`
 
 Walk over the tree of JS snippets in this node and its children. The walking
 function is called once for each snippet of JS and is passed that snippet and
@@ -168,14 +168,14 @@ the its original associated source's line/column location.
 
 * `fn`: The traversal function.
 
-#### SourceNode.prototype.join(sep)
+#### `SourceNode.prototype.join(sep)`
 
-Like `Array.prototype.join` except for SourceNodes. Inserts the separator
+Like `Array.prototype.join` except for `SourceNodes`. Inserts the separator
 between each of this source node's children.
 
 * `sep`: The separator.
 
-#### SourceNode.prototype.replaceRight(pattern, replacement)
+#### `SourceNode.prototype.replaceRight(pattern, replacement)`
 
 Call `String.prototype.replace` on the very right-most source snippet. Useful
 for trimming whitespace from the end of a source node, etc.
@@ -184,15 +184,15 @@ for trimming whitespace from the end of a source node, etc.
 
 * `replacement`: The thing to replace the pattern with.
 
-#### SourceNode.prototype.toString()
+#### `SourceNode.prototype.toString()`
 
 Return the string representation of this source node. Walks over the tree and
 concatenates all the various snippets together to one string.
 
-### SourceNode.prototype.toStringWithSourceMap(startOfSourceMap)
+### `SourceNode.prototype.toStringWithSourceMap(startOfSourceMap)`
 
 Returns the string representation of this tree of source nodes, plus a
-SourceMapGenerator which contains all the mappings between the generated and
+`SourceMapGenerator` which contains all the mappings between the generated and
 original sources.
 
 The arguments are the same as those to `new SourceMapGenerator`.
